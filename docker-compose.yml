@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./static/audio:/app/static/audio
+      - ./static/images:/app/static/images
+      - ./db.sqlite3:/app/db.sqlite3
+    environment:
+      - DEBUG=True
