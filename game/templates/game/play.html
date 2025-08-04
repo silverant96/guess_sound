@@ -1,19 +1,39 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
-<head><title>Угадай звук</title></head>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Угадай звук</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
+    <link rel="stylesheet" href="{% static '/play_style.css' %}">
+</head>
 <body>
-  <h1>Угадай звук!</h1>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="/static/logo1.png" alt="Логотип" class="logo">
+                <h2>Угадай звук</h2>
+            </div>
+            <a href="{% url 'logout' %}" class="logout-link">Выйти</a>
+        </div>
+    </header>
+
+  <div class="game-container">
   {% if error %}
     <p>{{ error }}</p>
   {% else %}
     <audio id="sound" src="{{ sound.sound.url }}" preload="auto"></audio>
-    <button onclick="document.getElementById('sound').play()">Слушать звук</button>
+    <div class="controls">
+        <button type="button" class="sound-button" onclick="document.getElementById('sound').play()">
+            Слушать звук
+        </button>
+    </div>
 
-    <div style="margin-top: 20px;">
+    <div class="image-grid">
       {% for item in choices %}
-        <div style="display: inline-block; margin: 10px;">
-          <img src="{{ item.image.url }}" width="150" onclick="checkAnswer('{{ item.name }}', '{{ sound.name }}')">
-          <p>{{ item.name }}</p>
+        <div class="image-choice" onclick="checkAnswer('{{ item.name }}', '{{ sound.name }}')">
+          <img src="{{ item.image.url }}" alt="{{ item.name }}" class="animal-image">
+          <p class="animal-name">{{ item.name }}</p>
         </div>
       {% endfor %}
     </div>
@@ -29,7 +49,10 @@
       }
     </script>
   {% endif %}
+  </div>
 
-  <p><a href="/logout/">Выйти</a></p>
+    <footer class="footer">
+        <p>&copy; 2025 Угадай звук — Образовательная игра для изучения звуков животных.</p>
+      </footer>
 </body>
 </html>

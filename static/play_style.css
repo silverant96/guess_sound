@@ -1,0 +1,145 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f0f4f8;
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.game-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.controls {
+  margin: 20px 0;
+}
+
+.sound-button {
+  padding: 14px 30px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.sound-button:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+}
+
+.image-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 30px 0;
+}
+
+.image-choice {
+  width: 200px;
+  padding: 15px;
+  border: 2px solid #ecf0f1;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  background: #fdfdfd;
+}
+
+.image-choice:hover {
+  border-color: #3498db;
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.15);
+  transform: scale(1.03);
+}
+
+.animal-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #eee;
+}
+
+.animal-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.logout-link {
+  background: #e74c3c;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.logout-link:hover {
+  background: #c0392b;
+}
+/* Header */
+.header {
+  background: #2c3e50;
+  color: white;
+  padding: 15px 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+  justify-content: center;
+}
+
+.logo {
+  height: 70px;
+  width: auto;
+  border-radius: 8px;
+}
+
+.logo-container h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+  color: #ecf0f1;
+}
+/* Footer */
+.footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 20px;
+  background: #2c3e50;
+  color: #ecf0f1;
+  font-size: 0.9rem;
+}
