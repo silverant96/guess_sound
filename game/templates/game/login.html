@@ -1,12 +1,34 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
-<head><title>Вход</title></head>
+<head>
+    <title>Вход</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Угадай звук</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
+    <link rel="stylesheet" href="{% static '/play_style.css' %}">
+</head>
 <body>
-<h2>Войдите в систему</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Войти</button>
-</form>
+<header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="/static/logo1.png" alt="Логотип" class="logo">
+                <h2>Угадай звук</h2>
+            </div>
+        </div>
+    </header>
+    <div class="login-container">
+        <div class="login-form">
+            <h2>Войдите в систему</h2>
+            <form method="post">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <button type="submit" class="login-button">Войти</button>
+            </form>
+        </div>
+    </div>
+<footer class="footer">
+    <p>&copy; 2025 Угадай звук — Образовательная игра для изучения звуков животных.</p>
+</footer>
 </body>
 </html>

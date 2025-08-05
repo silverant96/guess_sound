@@ -14,7 +14,10 @@
                 <img src="/static/logo1.png" alt="Логотип" class="logo">
                 <h2>Угадай звук</h2>
             </div>
-            <a href="{% url 'logout' %}" class="logout-link">Выйти</a>
+            <form action="{% url 'logout' %}" method="post"style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-link">Выйти</button>
+            </form>
         </div>
     </header>
 

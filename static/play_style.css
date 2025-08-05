@@ -89,9 +89,9 @@ body {
   color: white;
   padding: 10px 20px;
   border-radius: 8px;
-  text-decoration: none;
   font-weight: 500;
   transition: background 0.3s ease;
+  box-shadow: none;
 }
 
 .logout-link:hover {
@@ -142,4 +142,34 @@ body {
   background: #2c3e50;
   color: #ecf0f1;
   font-size: 0.9rem;
+}
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 60px; /* Отступ сверху для хедера */
+}
+.login-form {
+  max-width: 400px; /* Ограничиваем ширину формы */
+  background: white; /* Белый фон */
+  border-radius: 12px; /* Округлённые углы */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Тень */
+  padding: 30px 20px; /* Поля внутри контейнера */
+  text-align: center; /* Выравнивание текста */
+}
+.login-button {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 14px 30px;
+  font-size: 1.1rem;
+  background: #e74c3c;
+  color: white;
+  border-radius: 50px;
+  border: none;
+}
+
+.login-button:hover {
+    background: #c0392b;
 }
