@@ -41,15 +41,33 @@
       {% endfor %}
     </div>
 
+    {% if correct_feedback_audio %}
+  <audio id="correct-sound" src="{{ correct_feedback_audio }}"></audio>
+{% endif %}
+{% if wrong_feedback_audio %}
+  <audio id="wrong-sound" src="{{ wrong_feedback_audio }}"></audio>
+{% endif %}
+
     <script>
-      function checkAnswer(selected, correct) {
-        if (selected === correct) {
-          alert('Правильно! Это ' + correct);
-          location.reload();
-        } else {
-          alert('Неправильно! Попробуй ещё раз.');
+    function checkAnswer(selected, correct) {
+      const correctAudio = document.getElementById('correct-sound');
+      const wrongAudio = document.getElementById('wrong-sound');
+    
+      if (selected === correct) {
+        // Проигрываем звук успеха
+        if (correctAudio) {
+          correctAudio.play();
         }
+        alert('Правильно! Это ' + correct);
+        setTimeout(() => location.reload(), 1000);
+      } else {
+        // Проигрываем звук ошибки
+        if (wrongAudio) {
+          wrongAudio.play();
+        }
+        alert('Неправильно! Попробуй ещё раз.');
       }
+    }
     </script>
   {% endif %}
   </div>

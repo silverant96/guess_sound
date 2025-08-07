@@ -9,26 +9,24 @@ def play(request):
     if not sounds:
         return render(request, 'game/play.html', {'error': 'Нет доступных звуков.'})
 
-    # Если только один звук — не можем составить выбор (нужны 2 неправильных варианта)
-    if len(sounds) < 3:
-        # Всё равно играем, но просто показываем все доступные картинки
-        choices = sounds.copy()
-        random.shuffle(choices)
-        correct = random.choice(sounds)
-        return render(request, 'game/play.html', {
-            'sound': correct,
-            'choices': choices,
-            'warning': 'Добавьте больше звуков, чтобы игра была интереснее!',
-        })
+    correct_sound = random.choice(sounds)
+    all_choices = sounds.copy()
+    random.shuffle(all_choices)
 
-    # Обычная игра: выбираем правильный + 2 случайных неправильных
-    correct = random.choice(sounds)
-    all_others = [s for s in sounds if s.id != correct.id]
-    wrong_choices = random.sample(all_others, 2)  # теперь точно есть минимум 2 других
-    choices = wrong_choices + [correct]
-    random.shuffle(choices)
+    # Получаем системные звуки
+    try:
+        correct_audio = GameSound.objects.get(sound_type='correct').audio.url
+    except GameSound.DoesNotExist:
+        correct_audio = None  # или оставить пустым
+
+    try:
+        wrong_audio = GameSound.objects.get(sound_type='wrong').audio.url
+    except GameSound.DoesNotExist:
+        wrong_audio = None
 
     return render(request, 'game/play.html', {
-        'sound': correct,
-        'choices': choices,
+        'sound': correct_sound,
+        'choices': all_choices,
+        'correct_feedback_audio': correct_audio,
+        'wrong_feedback_audio': wrong_audio,
     })
