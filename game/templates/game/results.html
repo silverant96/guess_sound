@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Результаты игры</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
+    <link rel="stylesheet" href="{% static 'result_style.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="/static/logo1.png" alt="Логотип" class="logo">
+                <h2>Угадай звук</h2>
+            </div>
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-link">Выйти</button>
+            </form>
+        </div>
+    </header>
+
+    <div class="results-container">
+        <h2>Игра завершена!</h2>
+        <p><strong>Правильных ответов:</strong> {{ correct_count }} из {{ total }}</p>
+        <p><strong>Ошибок:</strong> {{ wrong_count }}</p>
+
+        {% if wrong_list %}
+            <p><strong>Вы ошиблись в следующих животных:</strong></p>
+            <ul>
+                {% for animal in wrong_list %}
+                    <li>{{ animal }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Поздравляем! Вы не сделали ни одной ошибки! 🎉</p>
+        {% endif %}
+
+        <a href="{% url 'game:play' %}" class="start-button">Играть снова</a>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 Угадай звук — Образовательная игра для изучения звуков животных.</p>
+    </footer>
+</body>
+</html>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Угадай звук</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
-    <link rel="stylesheet" href="{% static '/play_style.css' %}">
+    <link rel="stylesheet" href="{% static 'play_style.css' %}">
 </head>
 <body>
     <header class="header">
@@ -14,66 +14,108 @@
                 <img src="/static/logo1.png" alt="Логотип" class="logo">
                 <h2>Угадай звук</h2>
             </div>
-            <form action="{% url 'logout' %}" method="post"style="display: inline;">
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
                 {% csrf_token %}
                 <button type="submit" class="logout-link">Выйти</button>
             </form>
         </div>
     </header>
 
-  <div class="game-container">
-  {% if error %}
-    <p>{{ error }}</p>
-  {% else %}
-    <audio id="sound" src="{{ sound.sound.url }}" preload="auto"></audio>
-    <div class="controls">
-        <button type="button" class="sound-button" onclick="document.getElementById('sound').play()">
-            Слушать звук
-        </button>
+    <div class="game-container">
+        {% if show_start %}
+            <div class="start-screen">
+                <h2>Добро пожаловать в игру "Угадай звук"!</h2>
+                <p>Послушайте звук и выберите, какое животное его издаёт.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="start-button">Начать игру</button>
+                </form>
+            </div>
+        {% elif error %}
+            <p>{{ error }}</p>
+        {% else %}
+            <!-- Прогресс -->
+            <div class="progress">
+                Вопрос {{ progress.current }} из {{ progress.total }}
+            </div>
+
+            <audio id="sound" src="{{ sound.sound.url }}" preload="auto"></audio>
+
+            <div class="controls">
+                <button type="button" class="sound-button" onclick="document.getElementById('sound').play()">
+                    Слушать звук
+                </button>
+            </div>
+
+            <div class="image-grid">
+                {% for item in choices %}
+                    <div class="image-choice" onclick="checkAnswer('{{ item.name }}', '{{ sound.name }}')">
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="animal-image">
+                        <p class="animal-name">{{ item.name }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if correct_feedback_audio %}
+                <audio id="correct-sound" src="{{ correct_feedback_audio }}"></audio>
+            {% endif %}
+            {% if wrong_feedback_audio %}
+                <audio id="wrong-sound" src="{{ wrong_feedback_audio }}"></audio>
+            {% endif %}
+        {% endif %}
     </div>
-
-    <div class="image-grid">
-      {% for item in choices %}
-        <div class="image-choice" onclick="checkAnswer('{{ item.name }}', '{{ sound.name }}')">
-          <img src="{{ item.image.url }}" alt="{{ item.name }}" class="animal-image">
-          <p class="animal-name">{{ item.name }}</p>
-        </div>
-      {% endfor %}
-    </div>
-
-    {% if correct_feedback_audio %}
-  <audio id="correct-sound" src="{{ correct_feedback_audio }}"></audio>
-{% endif %}
-{% if wrong_feedback_audio %}
-  <audio id="wrong-sound" src="{{ wrong_feedback_audio }}"></audio>
-{% endif %}
-
-    <script>
-    function checkAnswer(selected, correct) {
-      const correctAudio = document.getElementById('correct-sound');
-      const wrongAudio = document.getElementById('wrong-sound');
-    
-      if (selected === correct) {
-        // Проигрываем звук успеха
-        if (correctAudio) {
-          correctAudio.play();
-        }
-        alert('Правильно! Это ' + correct);
-        setTimeout(() => location.reload(), 1000);
-      } else {
-        // Проигрываем звук ошибки
-        if (wrongAudio) {
-          wrongAudio.play();
-        }
-        alert('Неправильно! Попробуй ещё раз.');
-      }
-    }
-    </script>
-  {% endif %}
-  </div>
 
     <footer class="footer">
         <p>&copy; 2025 Угадай звук — Образовательная игра для изучения звуков животных.</p>
-      </footer>
+    </footer>
+
+    <script>
+function checkAnswer(selected, correct) {
+    const correctAudio = document.getElementById('correct-sound');
+    const wrongAudio = document.getElementById('wrong-sound');
+
+    fetch('{% url "game:check_answer" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({ selected, correct })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.correct) {
+            // ✅ Правильный ответ — звук + алерт
+            if (correctAudio) correctAudio.play();
+            alert('Правильно! Это ' + correct);
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            // ❌ Неправильный — сначала звук, потом алерт
+            if (wrongAudio) {
+                const playPromise = wrongAudio.play();
+                if (playPromise !== undefined) {
+                    playPromise
+                        .then(() => {
+                            // Звук начался — можно показать alert
+                            alert('Неправильно! Попробуй ещё раз.');
+                        })
+                        .catch(error => {
+                            // На случай ошибки воспроизведения (редко)
+                            console.error("Не удалось воспроизвести звук:", error);
+                            alert('Неправильно! Попробуй ещё раз.');
+                        });
+                }
+            } else {
+                // Если звука нет — просто алерт
+                alert('Неправильно! Попробуй ещё раз.');
+            }
+        }
+    })
+    .catch(err => {
+        console.error('Ошибка:', err);
+        alert('Произошла ошибка. Попробуйте ещё раз.');
+    });
+}
+</script>
 </body>
 </html>
