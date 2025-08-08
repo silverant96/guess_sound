@@ -91,8 +91,7 @@ def check_answer(request):
         # Только при правильном ответе — переходим к следующему звуку
         request.session['current_index'] += 1
     else:
-        # При неправильном — остаёмся на этом же звуке
-        # Добавляем в список ошибок, если ещё не добавлено
+        request.session['current_index'] += 1  # ✅ ДОЛЖНО БЫТЬ!
         if correct not in request.session['wrong_answers']:
             request.session['wrong_answers'].append(correct)
 
@@ -106,7 +105,8 @@ def results(request):
     wrong_list = request.session.get('wrong_answers', [])
 
     # Опционально: сброс сессии после завершения
-    request.session.flush()
+    for key in ['game_started', 'sound_order', 'current_index', 'correct_count', 'wrong_answers']:
+        request.session.pop(key, None)
 
     return render(request, 'game/results.html', {
         'correct_count': correct_count,

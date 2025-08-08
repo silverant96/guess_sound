@@ -84,32 +84,30 @@ function checkAnswer(selected, correct) {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.correct) {
-            // ✅ Правильный ответ — звук + алерт
-            if (correctAudio) correctAudio.play();
-            alert('Правильно! Это ' + correct);
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            // ❌ Неправильный — сначала звук, потом алерт
-            if (wrongAudio) {
-                const playPromise = wrongAudio.play();
-                if (playPromise !== undefined) {
-                    playPromise
-                        .then(() => {
-                            // Звук начался — можно показать alert
-                            alert('Неправильно! Попробуй ещё раз.');
-                        })
-                        .catch(error => {
-                            // На случай ошибки воспроизведения (редко)
-                            console.error("Не удалось воспроизвести звук:", error);
-                            alert('Неправильно! Попробуй ещё раз.');
-                        });
-                }
-            } else {
-                // Если звука нет — просто алерт
-                alert('Неправильно! Попробуй ещё раз.');
+    if (data.correct) {
+        if (correctAudio) correctAudio.play();
+        alert('Правильно! Это ' + correct);
+    } else {
+        if (wrongAudio) {
+            const playPromise = wrongAudio.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        alert('Неправильно! Это был ' + correct + '. Следующий звук!');
+                    })
+                    .catch(() => {
+                        alert('Неправильно! Это был ' + correct + '. Следующий звук!');
+                    });
             }
+        } else {
+            alert('Неправильно! Это был ' + correct + '. Следующий звук!');
         }
+    }
+
+    // ВСЕГДА перезагружаем, чтобы показать следующий вопрос
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
     })
     .catch(err => {
         console.error('Ошибка:', err);
